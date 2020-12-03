@@ -1,28 +1,15 @@
-#include <algorithm>
-#include <cassert>
-#include <iostream>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-
+#include "../lib.hpp"
 using namespace std;
-
-template <typename T>
-auto len(const T& c) -> int {
-	return static_cast<int>(c.size()); }
 
 int main() {
 
-	vector<int> nums;
+	vi nums;
 	nums.reserve(1000);
-	std::string l;
+	string l;
 	while (getline(cin, l)) {
 		nums.push_back(stoi(l)); }
 
-	sort(begin(nums), end(nums));
+	sort(ALL(nums));
 
 	int a, b, c;
 
@@ -30,11 +17,11 @@ int main() {
 	for (int i=0; i<len(nums)-1; ++i) {
 		a = nums[i];
 		int diff = 2020 - a;
-		if (binary_search(begin(nums)+i+1, end(nums), diff)) {
+		if (binary_search(B(nums)+i+1, E(nums), diff)) {
 			b = diff;
 			break; }}
 	assert(b != -1);
-	std::cout << (a*b) << endl;
+	cout << (a*b) << nl;
 
 
 	a = b = c = -1;
@@ -43,10 +30,10 @@ int main() {
 		for (int j=i+1; j<len(nums)-1; ++j) {
 			b = nums[j];
 			int diff = 2020 - a - b;
-			if (diff>=0 && binary_search(begin(nums)+j+1, end(nums), diff)) {
+			if (diff>=0 && binary_search(B(nums)+j+1, E(nums), diff)) {
 				c = diff;
 				goto found; }}}
 found:
-	std::cout << (a*b*c) << endl;
+	cout << (a*b*c) << nl;
 
 	return 0; }
