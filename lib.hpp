@@ -34,7 +34,6 @@ struct Int2 {
 
 
 void Split(const std::string& str, char delim, std::vector<std::string>& out) {
-	std::vector<std::string> items;
 	std::string src(str);
 	auto nextmatch = src.find(delim);
 	std::size_t cnt{0};
@@ -74,3 +73,7 @@ auto LoadCharMatrix(std::istream& is) -> CharMap {
 		for (int x=0; x<stride; ++x) {
 			map[y*stride + x] = lines[y][x]; }}
 	return { move(map), stride, height }; };
+
+
+auto IsHex(char ch) -> bool {
+	return ('0'<=ch && ch <= '9') || ('a'<=ch && ch<='f'); }
