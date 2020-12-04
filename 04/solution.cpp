@@ -1,70 +1,59 @@
 #include "../lib.hpp"
 using namespace std;
 
-int main() {
-	string fields{"cid pid ecl hcl hgt eyr iyr byr"};
+auto main() -> int {
+	string_view fields{"cid pid ecl hcl hgt eyr iyr byr"};
 
 	using valfun = bool(*)(const string&);
 	array<valfun, 8> validators = {{
-		// cid always avlid
+		// cid always valid
 		[](const string& s) -> bool { return true; },
 
 		// pid
 		[](const string& s) -> bool {
-			return (s.size() == 9 &&
-			        9 == accumulate(ALL(s), 0,
-			                        [](auto ax, auto ch) { return ax + ('0'<=ch&&ch<='9'); })); },
+			return s.size() == 9 &&
+			       all_of(ALL(s), [](auto ch) { return isdigit(ch); }); },
 
 		// ecl
 		[](const string& s) -> bool {
-			return string{"amb blu brn gry grn hzl oth"}.find(s) != string::npos; },
+			return string_view{"amb blu brn gry grn hzl oth"}.find(s) != string::npos; },
 
 		// hcl
 		[](const string& s) -> bool {
 			return s.size()==7 &&
 			       s[0]=='#' &&
-			       accumulate(begin(s)+1, end(s), true,
-			                  [](auto ax, auto ch) { return ax && IsHex(ch); }); },
+			       all_of(begin(s)+1, end(s), [](auto ch) { return isxdigit(ch); }); },
 
 		// hgt
 		[](const string& s) -> bool {
-			if (s.size() < 4) return false;
-			auto m1 = s[s.size()-1];
-			auto m2 = s[s.size()-2];
-			auto m3 = s[s.size()-3];
-			if (!('0'<=m3 && m3<='9')) return false;
-			if (m2=='c' && m1=='m') {
-				auto dim = stoi(s);
-				return 150<=dim && dim<=193; }
-			else if (m2=='i' && m1=='n') {
-				auto dim = stoi(s);
-				return 59 <= dim && dim <= 76; }
+			if (s.size() >= 4) {
+				auto m1 = s[s.size()-1];
+				auto m2 = s[s.size()-2];
+				auto m3 = s[s.size()-3];
+				if (isdigit(m3)) {
+					if (m2=='c' && m1=='m') {
+						return inrange(stoi(s), 150, 193); }
+					else if (m2=='i' && m1=='n') {
+						return inrange(stoi(s), 59, 76); }}}
 			return false; },
 
 		// eyr
 		[](const string& s) -> bool {
-			auto v = stoi(s);
-			return 2020 <= v && v <= 2030; },
+			return inrange(stoi(s), 2020, 2030); },
 
 		// iyr
 		[](const string& s) -> bool {
-			auto v = stoi(s);
-			return 2010 <= v && v <= 2020; },
+			return inrange(stoi(s), 2010, 2020); },
 
 		// byr
 		[](const string& s) -> bool {
-			auto v = stoi(s);
-			return 1920 <= v && v <= 2002; },
-
-		}};
+			return inrange(stoi(s), 1920, 2002); }, }};
 
 
 	int part1{0};
 	int part2{0};
-
 	int presentBits{0};
 	int validBits{0};
-
 	auto finalize = [&]() {
 		part1 += (presentBits >= 0xfe);
 		part2 += (validBits >= 0xfe);

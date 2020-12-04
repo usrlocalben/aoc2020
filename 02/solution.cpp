@@ -17,10 +17,8 @@ int main() {
 		char ch = segs[1][0];
 		auto& word = segs[2];
 
-		int many = accumulate(ALL(word), 0, [&](auto ax, auto item) {
-		                      return ax + (item==ch); });
+		int many = count_if(ALL(word), [&](auto item) { return item==ch; });
 		part1 += (rl <= many && many <= rh);
-
 		part2 += (word[rl-1]!=word[rh-1]) && (word[rl-1]==ch || word[rh-1]==ch); }
 
 	cout << part1 << nl;
