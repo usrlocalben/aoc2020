@@ -12,14 +12,23 @@
 #include <utility>
 #include <vector>
 
+#define uset unordered_set
+#define umap unordered_map
 using vs = std::vector<std::string>;
 using vi = std::vector<int>;
-using vii = std::vector<std::pair<int, int>>;
+using pii = std::pair<int, int>;
+using vii = std::vector<pii>;
 const int oo = 0x3f3f3f3f;
 const std::string nl{"\n"};
 #define ALL(x) begin(x), end(x)
 #define B(x) begin(x)
 #define E(x) end(x)
+
+
+struct pair_hash {
+	template <class T1, class T2>
+	size_t operator()(const std::pair<T1, T2>& p) const {
+		return std::hash<T1>()(p.first) ^ std::hash<T2>()(p.second); } };
 
 
 template <typename T>
@@ -75,5 +84,5 @@ auto LoadCharMatrix(std::istream& is) -> CharMap {
 	return { move(map), stride, height }; };
 
 
-auto IsHex(char ch) -> bool {
-	return ('0'<=ch && ch <= '9') || ('a'<=ch && ch<='f'); }
+template <typename Tv, typename Td>
+auto inrange(const Tv& x, const Td& a, const Td& b) -> bool { return a<=x && x<=b; }
