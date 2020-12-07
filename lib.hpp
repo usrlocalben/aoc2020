@@ -17,23 +17,20 @@
 using vs = std::vector<std::string>;
 using vi = std::vector<int>;
 using pii = std::pair<int, int>;
+using psi = std::pair<string, int>;
 using vii = std::vector<pii>;
 const int oo = 0x3f3f3f3f;
 const std::string nl{"\n"};
 #define ALL(x) begin(x), end(x)
 #define B(x) begin(x)
 #define E(x) end(x)
+template <typename T> auto len(const T& c) -> int { return static_cast<int>(c.size()); }
 
 
 struct pair_hash {
 	template <class T1, class T2>
 	size_t operator()(const std::pair<T1, T2>& p) const {
 		return std::hash<T1>()(p.first) ^ std::hash<T2>()(p.second); } };
-
-
-template <typename T>
-auto len(const T& c) -> int {
-	return static_cast<int>(c.size()); }
 
 
 struct Int2 {
