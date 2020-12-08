@@ -17,7 +17,7 @@
 using vs = std::vector<std::string>;
 using vi = std::vector<int>;
 using pii = std::pair<int, int>;
-using psi = std::pair<string, int>;
+using psi = std::pair<std::string, int>;
 using vii = std::vector<pii>;
 const int oo = 0x3f3f3f3f;
 const std::string nl{"\n"};
