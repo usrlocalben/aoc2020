@@ -37,8 +37,21 @@ struct pair_hash {
 struct Int2 {
 	int x, y;
 	auto operator+=(Int2 rhs) -> Int2& { x+=rhs.x; y+=rhs.y; return *this; }
-	auto operator-=(Int2 rhs) -> Int2& { x-=rhs.x; y-=rhs.y; return *this; } };
+	auto operator-=(Int2 rhs) -> Int2& { x-=rhs.x; y-=rhs.y; return *this; }
+	auto operator*=(Int2 rhs) -> Int2& { x*=rhs.x; y*=rhs.y; return *this; }
+	auto operator*=(int rhs) -> Int2& { x*=rhs; y*=rhs; return *this; }
 
+	auto key() const -> int64_t {
+		return (static_cast<int64_t>(x)<<32)|y; }};
+
+auto operator==(Int2 a, Int2 b) -> bool { return a.x==b.x && a.y==b.y; }
+auto operator!=(Int2 a, Int2 b) -> bool { return a.x!=b.x || a.y!=b.y; }
+auto operator+(Int2 a, Int2 b) -> Int2 { a+=b; return a; }
+auto operator*(Int2 a, Int2 b) -> Int2 { a*=b; return a; }
+auto operator*(Int2 a, int b) -> Int2 { a*=b; return a; }
+
+auto operator<<(std::ostream& s, Int2 item) -> std::ostream& {
+	return s << "<Int2 " << item.x << ", " << item.y << ">"; }
 
 void Split(const std::string& str, char delim, std::vector<std::string>& out) {
 	std::string src(str);
