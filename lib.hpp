@@ -25,6 +25,8 @@ const std::string nl{"\n"};
 #define ALL(x) begin(x), end(x)
 #define B(x) begin(x)
 #define E(x) end(x)
+#define fi first
+#define se second
 template <typename T> auto len(const T& c) -> int { return static_cast<int>(c.size()); }
 
 
@@ -40,6 +42,9 @@ struct Int2 {
 	auto operator-=(Int2 rhs) -> Int2& { x-=rhs.x; y-=rhs.y; return *this; }
 	auto operator*=(Int2 rhs) -> Int2& { x*=rhs.x; y*=rhs.y; return *this; }
 	auto operator*=(int rhs) -> Int2& { x*=rhs; y*=rhs; return *this; }
+
+	auto md() -> int {
+		return abs(x)+abs(y); }
 
 	auto key() const -> int64_t {
 		return (static_cast<int64_t>(x)<<32)|y; }};
@@ -97,3 +102,21 @@ auto LoadCharMatrix(std::istream& is) -> CharMap {
 
 template <typename Tv, typename Td>
 auto inrange(const Tv& x, const Td& a, const Td& b) -> bool { return a<=x && x<=b; }
+
+auto LRUD(char ch) -> Int2 {
+	switch (ch) {
+	case 'L': return Int2{ -1, 0 };
+	case 'R': return Int2{  1, 0 };
+	case 'U': return Int2{  0,-1 };
+	case 'D': return Int2{  0, 1 }; }
+	std::cerr << "LRUD wtf?" << std::endl;
+	std::exit(1); }
+
+
+// dir=1 = counter-clockwise
+// dir=-1 = clockwise
+auto rot90(Int2 p, int t) -> Int2 {
+	return { -p.y*t, p.x*t };}
+
+auto botrot(Int2 dir, int value) -> Int2 {
+	return rot90(dir, value==0?1:-1); }
