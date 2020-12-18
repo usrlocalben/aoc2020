@@ -120,3 +120,16 @@ auto rot90(Int2 p, int t) -> Int2 {
 
 auto botrot(Int2 dir, int value) -> Int2 {
 	return rot90(dir, value==0?1:-1); }
+
+template <typename T>
+auto take_front(T& c) {
+	auto value = c.front();
+	c.pop_front();
+	return value; }
+
+template <typename T>
+auto take_back(T& c) {
+	auto value = c.back();
+	c.pop_back();
+	return value; }
+
