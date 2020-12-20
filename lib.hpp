@@ -1,12 +1,16 @@
 #pragma once
 #include <algorithm>
+#include <array>
 #include <cassert>
+#include <cmath>
+#include <cstdlib>
 #include <deque>
 #include <iostream>
 #include <numeric>
+#include <optional>
+#include <queue>
 #include <string>
 #include <string_view>
-#include <tuple>
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
@@ -15,9 +19,11 @@
 
 #define uset unordered_set
 #define umap unordered_map
+#define forn(i,n) for(int i=0;i<int(n);i++)
 using vs = std::vector<std::string>;
 using vi = std::vector<int>;
 using pii = std::pair<int, int>;
+using ll = long long;
 using psi = std::pair<std::string, int>;
 using vii = std::vector<pii>;
 const int oo = 0x3f3f3f3f;
@@ -27,6 +33,7 @@ const std::string nl{"\n"};
 #define E(x) end(x)
 #define fi first
 #define se second
+#define eb emplace_back
 constexpr auto kPi = 3.14169265359F;
 
 template <typename T> auto len(const T& c) -> int { return static_cast<int>(c.size()); }
