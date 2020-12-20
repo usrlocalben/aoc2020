@@ -27,6 +27,8 @@ const std::string nl{"\n"};
 #define E(x) end(x)
 #define fi first
 #define se second
+constexpr auto kPi = 3.14169265359F;
+
 template <typename T> auto len(const T& c) -> int { return static_cast<int>(c.size()); }
 
 
@@ -47,16 +49,81 @@ struct Int2 {
 		return abs(x)+abs(y); }
 
 	auto key() const -> int64_t {
-		return (static_cast<int64_t>(x)<<32)|y; }};
+		return (int64_t(x)<<32)|uint32_t(y); }
+
+	static
+	auto fromkey(int64_t a) -> Int2 {
+		return { int(a>>32), int(a&0xffffffff) }; } };
+
+struct Int3 {
+	int x, y, z;
+	Int3() = default;
+	constexpr explicit Int3(int x_) :
+		x(x_), y(x_), z(x_){}
+	constexpr Int3(int x_, int y_, int z_) :
+		x(x_), y(y_), z(z_) {}
+	auto operator+=(Int3 other) -> Int3& { x+=other.x; y+=other.y; z+=other.z; return *this; }
+	auto operator-=(Int3 other) -> Int3& { x-=other.x; y-=other.y; z-=other.z; return *this; }
+	auto operator*=(Int3 other) -> Int3& { x*=other.x; y*=other.y; z*=other.z; return *this; }
+
+	auto xy() const -> Int2 { return { x, y }; }};
+
+struct Int4 {
+	int x, y, z, w;
+	Int4() = default;
+	constexpr explicit Int4(int x_) :
+		x(x_), y(x_), z(x_), w(x_){}
+	constexpr Int4(int x_, int y_, int z_, int w_) :
+		x(x_), y(y_), z(z_), w(w_) {}
+	auto operator+=(Int4 other) -> Int4& { x+=other.x; y+=other.y; z+=other.z; w+=other.w; return *this; }
+	auto operator-=(Int4 other) -> Int4& { x-=other.x; y-=other.y; z-=other.z; w-=other.w; return *this; }
+	auto operator*=(Int4 other) -> Int4& { x*=other.x; y*=other.y; z*=other.z; w*=other.w; return *this; }
+
+	auto xyz() const -> Int3 { return {x,y,z}; }
+	auto xy() const -> Int2 { return {x,y}; } };
+
+auto operator- (Int2 a) -> Int2 { return { -a.x, -a.y }; }
+auto operator+ (Int2 a, Int2 b) -> Int2 { a += b; return a; }
+auto operator- (Int2 a, Int2 b) -> Int2 { a -= b; return a; }
+auto operator* (Int2 a, Int2 b) -> Int2 { a *= b; return a; }
+auto operator* (Int2 a, int b) -> Int2 { a *= Int2{b,b}; return a; }
 
 auto operator==(Int2 a, Int2 b) -> bool { return a.x==b.x && a.y==b.y; }
+auto operator==(Int3 a, Int3 b) -> bool { return a.x==b.x && a.y==b.y && a.z==b.z; }
+auto operator==(Int4 a, Int4 b) -> bool { return a.x==b.x && a.y==b.y && a.z==b.z && a.w==b.w; }
 auto operator!=(Int2 a, Int2 b) -> bool { return a.x!=b.x || a.y!=b.y; }
-auto operator+(Int2 a, Int2 b) -> Int2 { a+=b; return a; }
-auto operator*(Int2 a, Int2 b) -> Int2 { a*=b; return a; }
-auto operator*(Int2 a, int b) -> Int2 { a*=b; return a; }
+auto operator!=(Int3 a, Int3 b) -> bool { return a.x!=b.x || a.y!=b.y || a.z!=b.z; }
+auto operator!=(Int4 a, Int4 b) -> bool { return a.x!=b.x || a.y!=b.y || a.z!=b.z || a.w!=b.w; }
 
-auto operator<<(std::ostream& s, Int2 item) -> std::ostream& {
+auto operator<<(std::ostream& s, Int2 item) -> decltype(s) {
 	return s << "<Int2 " << item.x << ", " << item.y << ">"; }
+auto operator<<(std::ostream& s, Int3 item) -> decltype(s) {
+	return s << "<Int3 " << item.x << ", " << item.y << ", " << item.z << ">"; }
+
+auto abs(Int2 a) -> Int2 { return { std::abs(a.x), std::abs(a.y) }; }
+auto abs(Int3 a) -> Int3 { return { std::abs(a.x), std::abs(a.y), std::abs(a.z) }; }
+auto hadd(Int2 a) -> int { return a.x + a.y; }
+auto hadd(Int3 a) -> int { return a.x + a.y + a.z; }
+auto mdist(Int2 a, Int2 b) -> int { return hadd(abs(a - b)); }
+auto vmax(Int2 a, Int2 b) -> Int2 { return { std::max(a.x, b.x), std::max(a.y, b.y) }; }
+auto vmin(Int2 a, Int2 b) -> Int2 { return { std::min(a.x, b.x), std::min(a.y, b.y) }; }
+// auto vcomp(Int3 a, Int3 b) -> Int3{ return { comp3(a.x,b.x), comp3(a.y,b.y), comp3(a.z,b.z) }; }
+auto area(Int2 a) -> int64_t { return a.x*a.y; }
+
+namespace std {
+	template <>
+	struct hash<Int2> {
+		auto operator()(Int2 a) const -> std::size_t {
+			return hash<int>()(a.x) ^ hash<int>()(a.y); }};
+	template <>
+	struct hash<Int3> {
+		auto operator()(Int3 a) const -> std::size_t {
+			return hash<int>()(a.x) ^ hash<int>()(a.y) ^ hash<int>()(a.z); }};
+	template <>
+	struct hash<Int4> {
+		auto operator()(Int4 a) const -> std::size_t {
+			return hash<int>()(a.x) ^ hash<int>()(a.y) ^ hash<int>()(a.z) ^ hash<int>()(a.w); }}; }
+
 
 void Split(const std::string& str, char delim, std::vector<std::string>& out) {
 	std::string src(str);
@@ -73,6 +140,32 @@ void Split(const std::string& str, char delim, std::vector<std::string>& out) {
 		src = src.substr(nextmatch + 1);
 		nextmatch = src.find(delim); }
 	out.resize(cnt); }
+
+
+auto Split(std::string text, const std::string& delim) -> std::vector<std::string> {
+	std::vector<std::string> items;
+	auto nextmatch = text.find(delim);
+	while (true) {
+		auto item = text.substr(0, nextmatch);
+		items.push_back(item);
+		if (nextmatch == std::string::npos) { break; }
+		text = text.substr(nextmatch + delim.size());
+		nextmatch = text.find(delim); }
+	return items; }
+
+
+auto SplitNums(const std::string& str, char ch=',') -> std::vector<int64_t> {
+	std::vector<int64_t> items;
+	std::string src(str);
+	auto nextmatch = src.find(ch);
+	while (true) {
+		auto item = src.substr(0, nextmatch);
+		items.push_back(stol(item));
+		if (nextmatch == std::string::npos) { break; }
+		src = src.substr(nextmatch + 1);
+		nextmatch = src.find(ch); }
+	return items; }
+
 
 
 struct CharMap {
@@ -121,15 +214,19 @@ auto rot90(Int2 p, int t) -> Int2 {
 auto botrot(Int2 dir, int value) -> Int2 {
 	return rot90(dir, value==0?1:-1); }
 
+auto signsep(int x) -> pii {
+	if (x < 0) {
+		return { -x, -1 }; }
+	return { x, 1 }; }
+
 template <typename T>
 auto take_front(T& c) {
-	auto value = c.front();
+	auto it = c.front();
 	c.pop_front();
-	return value; }
+	return it; }
 
 template <typename T>
 auto take_back(T& c) {
-	auto value = c.back();
+	auto it = c.back();
 	c.pop_back();
-	return value; }
-
+	return it; }
