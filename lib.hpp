@@ -26,6 +26,7 @@ using pii = std::pair<int, int>;
 using ll = long long;
 using psi = std::pair<std::string, int>;
 using vii = std::vector<pii>;
+using uss = std::unordered_set<std::string>;
 const int oo = 0x3f3f3f3f;
 const std::string nl{"\n"};
 #define ALL(x) begin(x), end(x)
@@ -199,6 +200,17 @@ auto LoadCharMatrix(std::istream& is) -> CharMap {
 			map[y*stride + x] = lines[y][x]; }}
 	return { move(map), stride, height }; };
 
+template <int N>
+int ReverseBits(int a) {
+	int out = 0;
+	for (int i=0; i<N; ++i) {
+		out |= ((a&(1<<i))!=0) << (N-i-1); }
+	return out; }
+
+template <typename T>
+T Mod(T a, T b) {
+	auto tmp = a%b;
+	return tmp < 0 ? tmp+b : tmp; }
 
 template <typename Tv, typename Td>
 auto inrange(const Tv& x, const Td& a, const Td& b) -> bool { return a<=x && x<=b; }
@@ -221,6 +233,37 @@ auto rot90(Int2 p, int t) -> Int2 {
 auto botrot(Int2 dir, int value) -> Int2 {
 	return rot90(dir, value==0?1:-1); }
 
+/* 
+ * ccw rotations of aabb, giving index
+ * of _unrotated_ object.
+ * top/left/bottom/right = 0/1/2/3
+const array<Int2, 4> dirs = {{ {0,-1}, {-1,0}, {0,1}, {1,0} }};
+int Top   (int r) { return Mod(0-r,4); }
+int Left  (int r) { return Mod(1-r,4); }
+int Bottom(int r) { return Mod(2-r,4); }
+int Right (int r) { return Mod(3-r,4); }
+*/
+
+
+/*
+auto introtate(Int2 coord, int rot, int dim) -> Int2 {
+	if (dim%2==0) {
+		coord.x =   coord.x *2 - (dim-1);
+		coord.y = (-coord.y)*2 + (dim-1);
+		for (int n=0; n<rot; ++n) {
+			coord = rot90(coord, -1); }
+		coord.y = -(coord.y-(dim-1))/2;
+		coord.x =   (coord.x+(dim-1))/2; }
+	else {
+		coord.x =   coord.x - (dim/2);
+		coord.y = (-coord.y) + (dim/2);
+		for (int n=0; n<rot; ++n) {
+			coord = rot90(coord, -1); }
+		coord.y = -(coord.y-(dim/2));
+		coord.x =   (coord.x+(dim/2)); }
+	return coord; }
+*/
+
 auto signsep(int x) -> pii {
 	if (x < 0) {
 		return { -x, -1 }; }
@@ -237,3 +280,11 @@ auto take_back(T& c) {
 	auto it = c.back();
 	c.pop_back();
 	return it; }
+
+auto Intersect(const uss& a, const uss& b) -> uss {
+	uss out;
+	out.reserve(std::min(a.size(),b.size()));
+	for (auto item : a) {
+		if (b.find(item) != end(b)) {
+			out.insert(item); }}
+	return out; }
