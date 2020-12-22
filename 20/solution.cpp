@@ -7,15 +7,7 @@ umap<int, array<vs,2>> tiles;
 
 const array<Int2, 4> dirs = {{ {0,-1}, {-1,0}, {0,1}, {1,0} }};
 
-int Rev(int a) {
-	int out = 0;
-	for (int i=0; i<10; ++i) {
-		out |= ((a&(1<<i))!=0) << (9-i); }
-	return out; }
-
-int Mod(int a, int b) {
-	int tmp = a%b;
-	return tmp < 0 ? tmp+b : tmp; }
+int Rev(int a) { return ReverseBits<10>(a); }
 
 constexpr int dim=12;
 
