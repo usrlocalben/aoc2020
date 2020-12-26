@@ -281,8 +281,9 @@ auto take_back(T& c) {
 	c.pop_back();
 	return it; }
 
-auto Intersect(const uss& a, const uss& b) -> uss {
-	uss out;
+template <typename T>
+auto Intersect(const std::unordered_set<T>& a, const std::unordered_set<T>& b) -> std::unordered_set<T> {
+	std::unordered_set<T> out;
 	out.reserve(std::min(a.size(),b.size()));
 	for (auto item : a) {
 		if (b.find(item) != end(b)) {
